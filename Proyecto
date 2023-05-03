@@ -1,0 +1,207 @@
+class Figura 
+{
+  constructor(x,y, alto, ancho, vx, vy) 
+  {
+    this.posicion=createVector(x,y);
+    this.alto = alto;
+    this.ancho = ancho;
+    this.velocidad= createVector(vx,vy);
+  }
+  update()
+  {
+    let randx = random (1,5)
+    let randy = random (1,5)
+    if(this.posicion.x + this.ancho >= 500)
+       {
+         this.velocidad.x=this.velocidad.x * -1
+         this.velocidad.y=randy;
+       }
+    if(this.posicion.x + this.ancho <= this.ancho)
+       {
+         this.velocidad.x=this.velocidad.x * -1
+         this.velocidad.y=randy;
+       }
+    if(this.posicion.y + this.alto <= this.alto)
+       {
+         this.velocidad.x=randx;
+         this.velocidad.y=this.velocidad.y * -1;
+       }
+    if(this.posicion.y + this.alto >= 500)
+       {
+         this.velocidad.x=randx;
+         this.velocidad.y=this.velocidad.y * -1;
+       }
+    this.posicion.add(this.velocidad);
+  }
+  draw()
+  {
+    fill(this.fillred,this.fillgreen,this.fillblue);
+    stroke("green");
+    rect(this.posicion.x,this.posicion.y,this.alto,this.ancho);
+  }
+}
+
+class Rectangulo extends Figura
+{
+  constructor(x,y, alto, ancho, vx, vy) 
+  {
+    super (x,y, alto, ancho, vx, vy);
+  }
+  draw()
+  {
+    let rr = random (0,255)
+    let rg = random (0,255)
+    let rb = random (0,255)
+    fill(rr,rg,rb);
+    stroke("red");
+    rect(this.posicion.x,this.posicion.y,this.alto,this.ancho);
+  }
+}
+
+class Elipse extends Figura
+{
+  constructor(x,y, alto, ancho, vx, vy) 
+  {
+    super (x,y, alto, ancho, vx, vy);
+  }
+  draw()
+  {
+    let rr = random (0,255)
+    let rg = random (0,255)
+    let rb = random (0,255)
+    fill(rr,rg,rb);
+    stroke("green");
+    ellipse(this.posicion.x,this.posicion.y,this.alto,this.ancho);
+  }
+}
+
+var figuras=[];
+var dibujando='null';
+var btnCirculo='null';
+var btnRectangulo='null';
+var btnN2='null';
+var btnFinalizar='null';
+var btnBlanco='null';
+var btnColor='null';
+var btnN1='null';
+
+function setup() 
+{
+  createCanvas(500, 500);
+  
+  btnCirculo= createButton('Circulo')
+  btnCirculo.position(200,0);
+  btnCirculo.mousePressed(changeCirculo);
+  
+  
+  btnRectangulo = createButton('Rectangulo')
+  btnRectangulo.position(100,0);
+  btnRectangulo.mousePressed(changeRectangulo);
+  
+  btnN2= createButton('Nivel 2')
+  btnN2.position(0,0);
+  btnN2.mouseClicked(Menu2);
+}
+
+function changeCirculo()
+{
+  btnCirculo.style('background-color','#000000');
+  btnRectangulo.style('background-color','#FFFFFF');
+  dibujando='circulo'
+}
+
+function changeRectangulo()
+{
+  btnRectangulo.style('background-color','#000000');
+  btnCirculo.style('background-color','#FFFFFF');
+  dibujando='rectangulo'
+}
+
+
+function Menu2()
+{
+  dibujando='null';
+  removeElements();
+  
+  btnFinalizar= createButton('Finalizar')
+  btnFinalizar.position(0,0);
+  btnFinalizar.mouseClicked(Finale);
+  
+  btnBlanco= createButton('Blanco')
+  btnBlanco.position(100,0);
+  btnBlanco.mouseClicked(Blanco);
+  
+  btnColor= createButton('Colorear')
+  btnColor.position(200,0);
+  btnColor.mouseClicked(Colorear);
+  
+  btnN1=createButton('Regresar')
+  btnN1.position(300,0);
+  btnN1.mouseClicked(Regresar);
+}
+
+function Finale()
+{
+  remove()
+}
+
+function Blanco()
+{
+  erase()
+  btnBlanco.style('background-color','#000000');
+  btnColor.style('background-color','#FFFFFF');
+}
+
+function Colorear()
+{
+  noErase()
+  btnBlanco.style('background-color','#FFFFFF');
+  btnColor.style('background-color','#000000');
+}
+
+function Regresar()
+{
+  dibujando='null';
+  removeElements();
+  
+  btnCirculo= createButton('Circulo')
+  btnCirculo.position(300,0);
+  btnCirculo.mousePressed(changeCirculo);
+  
+  
+  btnRectangulo = createButton('Rectangulo')
+  btnRectangulo.position(200,0);
+  btnRectangulo.mousePressed(changeRectangulo);
+  
+  btnN2= createButton('Nivel 2')
+  btnN2.position(0,0);
+  btnN2.mouseClicked(Menu2);
+}
+
+function draw() 
+{
+  background(0);
+  figuras.forEach((fig) =>
+  {
+    fig.draw();
+    fig.update();
+  }
+  );
+  
+}
+
+function mouseClicked() 
+{
+  //se crea un objeto segun la opcion actual
+  let RX = random (10,15)
+  let RY = random (10,15)
+  if (mouseY>20)
+    {
+     if (dibujando=='circulo')
+  figuras.push(new Elipse(mouseX, mouseY,20,20,RX,RY));
+  else if (dibujando=='rectangulo')
+  figuras.push(new Rectangulo(mouseX, mouseY,20,20,RX,RY));
+    }
+  // prevent default
+  return false;
+}
